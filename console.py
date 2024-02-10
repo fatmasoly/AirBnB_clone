@@ -256,6 +256,39 @@ class HBNBCommand(cmd.Cmd):
         setattr(storage.all()[key], attribute, value)
         storage.all()[key].save()
 
+    def fix_dict(self, cls_name, unq_id, str_dict):
+        """Helper method for update() with a dictionary."""
+        try:
+            data = json.loads(str_dict)
+        except json.JSONDecodeError:
+            print("** Invalid JSON format **")
+            return
+
+        if not cls_name:
+            print("** class name missing **")
+            return
+
+        if cls_name not in storage.classes():
+            print("** class doesn't exist **")
+            return
+
+        if unq_id is None:
+            print("** instance id missing **")
+            return
+        key = f"{cls_name}.{unq_id}"
+
+        if key not in storage.all():
+            print("** no instance found **")
+            return
+        attributes = storage.get_attr()[cls_name]
+        instance = storage.all()[key]
+
+        for attribute, value in data.items():
+            if attribute in attributes:
+                value = attributes[attribute](value)
+            setattr(instance, attribute, value)
+        instance.save()
+
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
