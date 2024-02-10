@@ -1,47 +1,46 @@
+README.md
 Project Description
-This project is an implementation of a command-line interpreter for managing Airbnb-like objects. It includes classes for various components such as users, places, reviews, cities, states, amenities, and more. The command-line interpreter allows users to create, retrieve, update, and delete these objects using simple commands.
+This project is an implementation of a command-line interpreter
+designed for managing instances of various classes defined in
+the models module. It provides a convenient way to create, view,
+update, and delete instances of different types such as Users,
+Places, Reviews, Cities, States, Amenities, and more, mimicking
+the functionality of Airbnb-like applications.
 
 Command Interpreter
-Starting the Interpreter
-To start the command interpreter, execute the console.py script located in the project directory.
+How to Start It
+To start the command interpreter, execute the console.py script
+located in the project directory. This can be done by running
+the following command in your terminal:
 
-bash
-Copy code
-./console.py
-Using the Interpreter
-Once the interpreter is started, you can use various commands to interact with the objects. The supported commands include:
+    ./console.py
+How to Use It
+Once the interpreter is started, you can use various commands to
+interact with the objects. Here are some of the supported commands:
 
-quit: Exit the command interpreter.
-EOF: Exit the command interpreter (same as quit).
-create: Create a new instance of a specified class.
-show: Display details of a specific instance.
-destroy: Delete a specific instance.
-all: Display details of all instances or instances of a specific class.
-update: Update attributes of a specific instance.
-count: Count the number of instances of a specified class.
+    quit: Exits the command interpreter.
+EOF: Exits the command interpreter(same as quit).
+create ClassName: Creates a new instance of the specified class.
+show ClassName ID: Displays the details of a
+specific instance by class name and ID.
+destroy ClassName ID: Deletes a specific
+instance by class name and ID.
+all ClassName: Displays all instances of a specific class.
+update ClassName ID AttributeName Value:
+    Updates an attribute of a specific instance.
+count ClassName: Counts the number of
+instances of a specified class.
 Examples
-Create a new user:
-bash
-Copy code
+Creating a New User
 (hbnb) create User
-Show details of a user with ID 123:
-bash
-Copy code
-(hbnb) show User 123
-Delete a specific instance:
-bash
-Copy code
-(hbnb) destroy User 123
-Display details of all instances of a specific class:
-bash
-Copy code
-(hbnb) all User
-Update attributes of a specific instance:
-bash
-Copy code
-(hbnb) update User 123 first_name "John"
-Count the number of instances of a specified class:
-bash
-Copy code
+Showing Details of a User with ID 123
+(hbnb) show User  123
+Deleting a User with ID 123
+(hbnb) destroy User  123
+Updating a User's First Name to John
+(hbnb) update User  123 first_name "John"
+Counting the Number of Users
 (hbnb) count User
-These are just a few examples of the commands supported by the command interpreter. You can explore more commands by typing help within the interpreter.
+These are just a few examples of the commands supported by
+the command interpreter. You can explore more commands
+by typing help within the interpreter.
