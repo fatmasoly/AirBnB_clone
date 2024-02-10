@@ -11,19 +11,7 @@ class BaseModel:
     """Defines the base model class for
     other classes to inherit from."""
     def __init__(self, *args, **kwargs):
-        """Initialize a new BaseModel instance.
-
-        Args:
-            *args: Variable length argument list.
-            **kwargs: Arbitrary keyword arguments.
-
-        Attributes:
-            id (str): The unique identifier for the instance.
-            created_at (datetime): The date and time
-            when the instance was created.
-            updated_at (datetime): The date and time
-            when the instance was last updated.
-        """
+        """Initialize a new BaseModel instance."""
         if kwargs:
             for key in kwargs:
                 if key == "created_at":

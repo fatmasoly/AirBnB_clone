@@ -11,7 +11,7 @@ from models.state import State
 from models.place import Place
 from models.city import City
 from models.review import Review
-import models
+from models import storage
 import json
 
 
@@ -99,7 +99,7 @@ class HBNBCommand(cmd.Cmd):
         if not line:
             print("** class name missing **")
         else:
-            class_dict = models.storage.classes()
+            class_dict = storage.classes()
         if line not in class_dict:
             print("** class doesn't exist **")
         else:
@@ -121,16 +121,16 @@ class HBNBCommand(cmd.Cmd):
             print("** class name missing **")
         else:
             args = line.split(' ')
-        if args[0] not in models.storage.classes():
+        if args[0] not in storage.classes():
             print("** class doesn't exist **")
         elif len(args) <= 1:
             print("** instance id missing **")
         else:
             key = "{}.{}".format(args[0], args[1])
-            if key not in models.storage.all():
+            if key not in storage.all():
                 print("** no instance found **")
             else:
-                print(models.storage.all()[key])
+                print(storage.all()[key])
 
     def do_destroy(self, line):
         """
@@ -146,17 +146,17 @@ class HBNBCommand(cmd.Cmd):
             print("** class name missing **")
         else:
             args = line.split(' ')
-            if args[0] not in models.storage.classes():
+            if args[0] not in storage.classes():
                 print("** class doesn't exist **")
             elif len(args) <= 1:
                 print("** instance id missing **")
             else:
                 key = "{}.{}".format(args[0], args[1])
-                if key not in models.storage.all():
+                if key not in storage.all():
                     print("** no instance found **")
                 else:
-                    del models.storage.all()[key]
-                    models.storage.save()
+                    del storage.all()[key]
+                    storage.save()
 
     def do_all(self, line):
         """
@@ -168,16 +168,16 @@ class HBNBCommand(cmd.Cmd):
         """
         if line is not None or line != "":
             args = line.split(' ')
-            if args[0] not in models.storage.classes():
+            if args[0] not in storage.classes():
                 print("** class doesn't exist **")
             else:
                 new_list = [str(obj)
-                            for key, obj in models.storage.all().items()
+                            for key, obj in storage.all().items()
                             if type(obj).__name__ == args[0]]
                 print(new_list)
         else:
             insta_list = [str(obj)
-                          for key, obj in models.storage.all().items()]
+                          for key, obj in storage.all().items()]
             print(insta_list)
 
     def do_count(self, line):
@@ -193,10 +193,10 @@ class HBNBCommand(cmd.Cmd):
         args = line.split(' ')
         if args[0] is None:
             print("** class name missing **")
-        elif args[0] not in models.storage.classes():
+        elif args[0] not in storage.classes():
             print("** class doesn't exist **")
         else:
-            count_list = [k for k in models.storage.all()
+            count_list = [k for k in storage.all()
                           if k.startswith(args[0] + '.')]
             print(len(count_list))
 
@@ -219,7 +219,7 @@ class HBNBCommand(cmd.Cmd):
             return
 
         class_name = parts[0]
-        if class_name not in models.storage.classes():
+        if class_name not in storage.classes():
             print("** class doesn't exist **")
             return
 
@@ -229,7 +229,7 @@ class HBNBCommand(cmd.Cmd):
 
         instance_id = parts[1]
         key = "{}.{}".format(class_name, instance_id)
-        if key not in models.storage.all():
+        if key not in storage.all():
             print("** no instance found **")
             return
 
@@ -244,7 +244,7 @@ class HBNBCommand(cmd.Cmd):
 
         value = " ".join(parts[3:])
         value = value.replace('"', '')
-        attributes = models.storage.get_attr()[class_name]
+        attributes = storage.get_attr()[class_name]
         cast = attributes.get(attribute)
         if cast:
             try:
@@ -253,8 +253,8 @@ class HBNBCommand(cmd.Cmd):
                 print("** invalid value for attribute **")
                 return
 
-        setattr(models.storage.all()[key], attribute, value)
-        models.storage.all()[key].save()
+        setattr(storage.all()[key], attribute, value)
+        storage.all()[key].save()
 
 
 if __name__ == '__main__':
