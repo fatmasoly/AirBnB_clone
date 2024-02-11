@@ -190,83 +190,133 @@ class HBNBCommand(cmd.Cmd):
                           if k.startswith(args[0] + '.')]
             print(len(count_list))
 
-    def do_update(self, line):
-        """
-        Update the attributes of a specified instance.
+    # def do_update(self, line):
+    #     """
+    #     Update the attributes of a specified instance.
 
-        Args:
-            line (str): The class name, instance id, attribute
-            name, and new value, separated by spaces.
+    #     Args:
+    #         line (str): The class name, instance id, attribute
+    #         name, and new value, separated by spaces.
 
-        Raises:
-            KeyError: If the class or instance does not exist in storage.
-            ValueError: If the value cannot be cast to
-            the attribute's data type.
-        """
-        parts = line.split()
-        if not parts:
-            print("** class name missing **")
+    #     Raises:
+    #         KeyError: If the class or instance does not exist in storage.
+    #         ValueError: If the value cannot be cast to
+    #         the attribute's data type.
+    #     """
+    #     parts = line.split()
+    #     if not parts:
+    #         print("** class name missing **")
+    #         return
+    #     class_name = parts[0]
+    #     if class_name not in storage.classes():
+    #         print("** class doesn't exist **")
+    #         return
+    #     if len(parts) < 2:
+    #         print("** instance id missing **")
+    #         return
+    #     instance_id = parts[1]
+    #     key = "{}.{}".format(class_name, instance_id)
+    #     if key not in storage.all():
+    #         print("** no instance found **")
+    #         return
+    #     if len(parts) < 3:
+    #         print("** attribute name missing **")
+    #         return
+    #     attribute = parts[2]
+    #     if len(parts) < 4:
+    #         print("** value missing **")
+    #         return
+    #     value = " ".join(parts[3:])
+    #     value = value.replace('"', '')
+    #     attributes = storage.get_attr()[class_name]
+    #     cast = attributes.get(attribute)
+    #     if cast:
+    #         try:
+    #             value = cast(value)
+    #         except ValueError:
+    #             print("** invalid value for attribute **")
+    #             return
+    #     setattr(storage.all()[key], attribute, value)
+    #     storage.all()[key].save()
+
+
+def do_update(self, line):
+    """
+    Update the attributes of a specified instance.
+
+    Args:
+        line (str): The class name, instance id, attribute
+        name, and new value, separated by spaces.
+
+    Raises:
+        KeyError: If the class or instance does not exist in storage.
+        ValueError: If the value cannot be cast to
+        the attribute's data type.
+    """
+    parts = line.split()
+    if not parts:
+        print("** class name missing **")
+        return
+    class_name = parts[0]
+    if class_name not in storage.classes():
+        print("** class doesn't exist **")
+        return
+    if len(parts) < 2:
+        print("** instance id missing **")
+        return
+    instance_id = parts[1]
+    key = "{}.{}".format(class_name, instance_id)
+    if key not in storage.all():
+        print("** no instance found **")
+        return
+    if len(parts) < 3:
+        print("** attribute name missing **")
+        return
+    attribute = parts[2]
+    if len(parts) < 4:
+        print("** value missing **")
+        return
+    value = " ".join(parts[3:])
+    value = value.replace('"', '')
+    if value.startswith("{") and value.endswith("}"):
+        try:
+            value = json.loads(value)
+        except json.JSONDecodeError:
+            print("** invalid JSON format **")
             return
-        class_name = parts[0]
-        if class_name not in storage.classes():
-            print("** class doesn't exist **")
+    attributes = storage.get_attr()[class_name]
+    cast = attributes.get(attribute)
+    if cast:
+        try:
+            value = cast(value)
+        except ValueError:
+            print("** invalid value for attribute **")
             return
-        if len(parts) < 2:
-            print("** instance id missing **")
-            return
-        instance_id = parts[1]
-        key = "{}.{}".format(class_name, instance_id)
-        if key not in storage.all():
-            print("** no instance found **")
-            return
-        if len(parts) < 3:
-            print("** attribute name missing **")
-            return
-        attribute = parts[2]
-        if len(parts) < 4:
-            print("** value missing **")
-            return
-        value = " ".join(parts[3:])
-        value = value.replace('"', '')
-        attributes = storage.get_attr()[class_name]
-        cast = attributes.get(attribute)
-        if cast:
-            try:
-                value = cast(value)
-            except ValueError:
-                print("** invalid value for attribute **")
-                return
-        setattr(storage.all()[key], attribute, value)
-        storage.all()[key].save()
+    setattr(storage.all()[key], attribute, value)
+    storage.all()[key].save()
 
     def fix_dict(self, cls_name, unq_id, str_dict):
         """Helper method for update() with a dictionary."""
-
         try:
             data = json.loads(str_dict)
         except json.JSONDecodeError:
             print("** Invalid JSON format **")
             return
-
         if not cls_name:
             print("** class name missing **")
             return
-
         if cls_name not in storage.classes():
             print("** class doesn't exist **")
             return
-
         if unq_id is None:
             print("** instance id missing **")
             return
         key = f"{cls_name}.{unq_id}"
-
         if key not in storage.all():
             print("** no instance found **")
             return
         attributes = storage.get_attr()[cls_name]
         instance = storage.all()[key]
-
         for attribute, value in data.items():
             if attribute in attributes:
                 value = attributes[attribute](value)
