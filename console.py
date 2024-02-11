@@ -108,16 +108,8 @@ class HBNBCommand(cmd.Cmd):
             print(new_instance.id)
 
     def do_show(self, line):
-        """
-        Display the string representation of a specified instance.
-
-        Args:
-            line (str): The class name and instance id, separated by space.
-
-        Raises:
-            KeyError: If the class or instance does not exist in storage.
-        """
-        if line is None or line == "":
+        """Display the string representation of a specified instance."""
+        if not line:
             print("** class name missing **")
         else:
             args = line.split(' ')
