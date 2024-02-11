@@ -142,21 +142,37 @@ class HBNBCommand(cmd.Cmd):
         Raises:
             KeyError: If the class or instance does not exist in storage.
         """
+        # if not line:
+        #     print("** class name missing **")
+        # else:
+        #     args = line.split(' ')
+        #     if args[0] not in storage.classes():
+        #         print("** class doesn't exist **")
+        #     elif len(args) <= 1:
+        #         print("** instance id missing **")
+        #     else:
+        #         key = "{}.{}".format(args[0], args[1])
+        #         if key not in storage.all():
+        #             print("** no instance found **")
+        #         else:
+        #             del storage.all()[key]
+        #             storage.save()
         if not line:
             print("** class name missing **")
-        else:
-            args = line.split(' ')
-            if args[0] not in storage.classes():
-                print("** class doesn't exist **")
-            elif len(args) <= 1:
-                print("** instance id missing **")
-            else:
-                key = "{}.{}".format(args[0], args[1])
-                if key not in storage.all():
-                    print("** no instance found **")
-                else:
-                    del storage.all()[key]
-                    storage.save()
+            return
+        args = line.split(' ')
+        if args[0] not in storage.classes():
+            print("** class doesn't exist **")
+            return
+        if len(args) <= 1:
+            print("** instance id missing **")
+            return
+        key = "{}.{}".format(args[0], args[1])
+        if key not in storage.all():
+            print("** no instance found **")
+            return
+        del storage.all()[key]
+        storage.save()
 
     def do_all(self, line):
         """
@@ -190,15 +206,26 @@ class HBNBCommand(cmd.Cmd):
         Raises:
             KeyError: If the class does not exist in storage.
         """
+        # args = line.split(' ')
+        # if args[0] is None:
+        #     print("** class name missing **")
+        # elif args[0] not in storage.classes():
+        #     print("** class doesn't exist **")
+        # else:
+        #     count_list = [k for k in storage.all()
+        #                   if k.startswith(args[0] + '.')]
+        #     print(len(count_list))
         args = line.split(' ')
-        if args[0] is None:
+        if not args[0]:
             print("** class name missing **")
-        elif args[0] not in storage.classes():
+            return
+        class_name = args[0]
+        if class_name not in storage.classes():
             print("** class doesn't exist **")
-        else:
-            count_list = [k for k in storage.all()
-                          if k.startswith(args[0] + '.')]
-            print(len(count_list))
+            return
+        count_list = [k for k in storage.all()
+                      if k.startswith(class_name + '.')]
+        print(len(count_list))
 
     def do_update(self, line):
         """
