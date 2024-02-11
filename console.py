@@ -253,45 +253,33 @@ def do_update(self, line):
         ValueError: If the value cannot be cast to
         the attribute's data type.
     """
-    parts = line.split()
-    if not parts:
-        print("** class name missing **")
+    parts = line.split(None, 3)  # Split into at most 4 parts
+    if len(parts) < 4:
+        print("** Missing arguments **")
         return
-    class_name = parts[0]
-    if class_name not in storage.classes():
-        print("** class doesn't exist **")
-        return
-    if len(parts) < 2:
-        print("** instance id missing **")
-        return
-    instance_id = parts[1]
+
+    class_name, instance_id, attribute, value = parts
+
+    # Strip quotes from value
+    value = value.strip('"')
+
     key = "{}.{}".format(class_name, instance_id)
     if key not in storage.all():
         print("** no instance found **")
         return
-    if len(parts) < 3:
-        print("** attribute name missing **")
+
+    attributes = storage.get_attr().get(class_name)
+    if not attributes or attribute not in attributes:
+        print("** invalid attribute name **")
         return
-    attribute = parts[2]
-    if len(parts) < 4:
-        print("** value missing **")
+
+    cast = attributes[attribute]
+    try:
+        value = cast(value)
+    except ValueError:
+        print("** invalid value for attribute **")
         return
-    value = " ".join(parts[3:])
-    value = value.replace('"', '')
-    if value.startswith("{") and value.endswith("}"):
-        try:
-            value = json.loads(value)
-        except json.JSONDecodeError:
-            print("** invalid JSON format **")
-            return
-    attributes = storage.get_attr()[class_name]
-    cast = attributes.get(attribute)
-    if cast:
-        try:
-            value = cast(value)
-        except ValueError:
-            print("** invalid value for attribute **")
-            return
+
     setattr(storage.all()[key], attribute, value)
     storage.all()[key].save()
 
