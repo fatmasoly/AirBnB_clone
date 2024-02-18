@@ -7,6 +7,8 @@
     margin: 20px;
     padding: 20px;
     width: 390px;
+    min-height: 250px;
+    vertical-align: top;
     border: #FF5A5F solid 1px;
     border-radius: 4px;
 }
